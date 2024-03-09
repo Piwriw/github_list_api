@@ -24,30 +24,17 @@ def github_json(user,repo,branch):
         except:
             result = 'Incorrect user parameter!Please check!'
     return result
-
+    
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        path = self.path
-        path = path.replace("'", '"')
-        repo_reg = re.compile(r'repo="(.*?)"')
-        user_reg = re.compile(r'user="(.*?)"')
-        branch_reg = re.compile(r'branch="(.*?)"')
-        if user_reg.findall(path):
-            user = user_reg.findall(path)[0]
-        else:
-            user = ''
-        if repo_reg.findall(path):
-            repo = repo_reg.findall(path)[0]
-        else:
-            repo = 'friends'
-        if branch_reg.findall(path):
-            branch = branch_reg.findall(path)[0]
-        else:
-            branch = 'master'
-        data = github_json(user,repo,branch)
+        # 2024-02-21 固定用户名 https://github.com/Zfour/python_github_calendar_api/issues/20
+        # path = self.path
+        # user = path.split('?')[1]
+        user = 'piwriw'
+        data = getdata(user)
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Content-type', 'application/json')
         self.end_headers()
-        self.wfile.write(json.dumps(data).encode())
+        self.wfile.write(json.dumps(data).encode('utf-8'))
         return
