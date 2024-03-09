@@ -27,11 +27,11 @@ def github_json(user,repo,branch):
     
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        # 2024-02-21 固定用户名 https://github.com/Zfour/python_github_calendar_api/issues/20
-        # path = self.path
-        # user = path.split('?')[1]
-        user = 'piwriw'
-        data = getdata(user)
+        parsed_path = urlparse(self.path)
+        query_params = parse_qs(parsed_path.query)
+        user = query_params.get('user', [None])[0]  # 获取'user'参数的值，如果不存在则默认为None
+        
+        data = getdata(user) if user else {"error": "User parameter not provided"}
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Content-type', 'application/json')
